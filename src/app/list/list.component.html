@@ -1,0 +1,33 @@
+<router-outlet></router-outlet>
+<div class="main">
+    <p-table [columns]="cols" [value]="itens" selectionMode="single" [(selection)]="selectedItem" (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+        <ng-template pTemplate="caption">
+            Lista de Itens
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">                    
+                    <span *ngIf="col.field != 'valDate' && col.field != 'fabDate' " >
+                         {{col.field == 'prshbl' && rowData[col.field] ? 'Sim' : col.field == 'prshbl'? 'Não' : rowData[col.field] }}
+                    </span>                     
+                    <span *ngIf="col.field == 'valDate' || col.field == 'fabDate' " >
+                        {{parseDate(rowData[col.field])}}
+                    </span> 
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary" let-rowData>
+                <div style="text-align:left">
+                    <button type="button" pButton icon="fa fa-plus" (click)="edit()" label="Add"></button>
+                </div>
+        </ng-template>  
+    </p-table>
+</div>

@@ -1,0 +1,14 @@
+.btnContainer{
+    float: right;
+    margin-top: 25px;
+}
+
+.iptPrice{
+    text-align: right;
+    font-family: Arial;
+    font-size: 17px;
+}
+
+input{
+    text-align:right;
+}

@@ -1,0 +1,78 @@
+<router-outlet style="width: 100%"></router-outlet>
+<div class="main" >        
+    <div class="ui-g ui-fluid" *ngIf="item">
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="vin">Nome</label>
+            </div>
+            <div class="ui-g-3">
+                <input pInputText id="name"[(ngModel)]="item.name"  autofocus maxlength="50" style="text-align: left" />
+                <p-message *ngIf="!item.name && showError"  severity="error" text="Este campo é obrigatório" ></p-message>                
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="year">Unidade de Medida</label>
+            </div>
+            <div class="ui-g-4">
+                <p-dropdown [options]="units" placeholder="Unidade de medida" id="unit" [(ngModel)]="item.unit"></p-dropdown>
+                <p-message  *ngIf="!item.unit && showError" severity="error" text="Este campo é obrigatório" ></p-message>
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="brand">Quantidade</label>
+            </div>
+            <div class="ui-g-2 ui-inputgroup">
+                <input *ngIf="item.unit == 'Litro' || item.unit == 'Quilograma' || !item.unit " type="text" mask="0*,000" pInputText id="amount" [(ngModel)]="item.amount"  />
+                <input *ngIf="item.unit == 'Unidade'" type='text'  mask="0*"   pInputText id="amount" [(ngModel)]="item.amount" />
+                <span *ngIf="item.unit == 'Litro' || !item.unit" class="ui-inputgroup-addon">lt</span>
+                <span *ngIf="item.unit == 'Quilograma'" class="ui-inputgroup-addon">kg</span>
+                <span *ngIf="item.unit == 'Unidade'" class="ui-inputgroup-addon">un</span>            
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="color">Preço</label>                                
+            </div>
+            <div class="ui-g-2">
+                <input pInputText currencyMask  [(ngModel)]="item.price" [options]="{ prefix: '', thousands: '.', decimal: ',' }" class="iptPrice" />
+                <p-message  *ngIf="!item.price && showError" severity="error" text="Este campo é obrigatório" ></p-message>
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="color">É Perecivel</label>
+            </div>
+            <div class="ui-g-4">
+                <p-checkbox [(ngModel)]="item.prshbl" label="Produto Perecível" binary="true"></p-checkbox>                
+            </div>
+        </div>
+        <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="color">Data de fabricação</label>
+                </div>
+                <div class="ui-g-3">
+                    <p-calendar id="fabDate" placeholder="Data de fabricação" [(ngModel)]="item.fabDate"  dateFormat="dd/mm/yy"></p-calendar>
+                    <p-message  *ngIf="!item.fabDate && showError"  severity="error" text="Este campo é obrigatório" ></p-message>                
+                </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="color">Data de validade</label>
+            </div>
+            <div class="ui-g-3">
+                <p-calendar id="valDate" placeholder="Data de validade" [(ngModel)]="item.valDate" dateFormat="dd/mm/yy"></p-calendar>
+                <p-message  *ngIf="!item.valDate && showError &&  item.prshbl"  severity="error" text="Este campo é obrigatório" ></p-message>                                
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button *ngIf="!newItem" type="button" pButton icon="fa fa-check" (click)="confirm()" label="Excluir"></button>        
+            <button type="button" pButton icon="fa fa-close" (click)="cancel()" label="Cancelar"></button>
+            <button type="button" pButton icon="fa fa-check" (click)="validate()" label="Salvar"></button>
+        </div>
+    </p-footer>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle" width="425"></p-confirmDialog>
