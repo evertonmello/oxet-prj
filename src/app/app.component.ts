@@ -12,9 +12,7 @@ export class AppComponent {
   } 
 
   title = 'app';
-  public val = 0
   public items;  
-  public check = false;
 
   ngOnInit() {
     this.setUpMenu();    
@@ -34,9 +32,4 @@ export class AppComponent {
   setPage(page){
     this.router.navigate(['/' + page]);
   }
-
-  validate(){
-    console.log("!")
-  }
-
 }

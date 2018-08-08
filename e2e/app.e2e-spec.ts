@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('avnd App', () => {
+describe('texo App', () => {
   let page: AppPage;
 
   beforeEach(() => {
