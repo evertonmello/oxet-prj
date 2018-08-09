@@ -103,7 +103,10 @@ export class FormComponent implements OnInit {
   validate(){      
     var save = true
     for (var property in this.item) {        
-      if(!this.item[property] && property != 'id' && property != 'prshbl'){
+      if(this.item.prshbl && !this.item.valDate){
+        save = false
+      }
+      if(!this.item[property] && property != 'id' && property != 'prshbl' && property != 'valDate'){
         save = false
       }       
     }
