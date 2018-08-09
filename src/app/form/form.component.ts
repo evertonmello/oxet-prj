@@ -60,7 +60,6 @@ export class FormComponent implements OnInit {
   }
 
   onSubmit(data) {
-    console.log(this.formdata)
     if(this.formdata.valid){
       this.save()
     }
