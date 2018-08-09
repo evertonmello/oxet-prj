@@ -46,6 +46,7 @@ export class FormComponent implements OnInit {
       .subscribe(params => this.setUpItem(params.item));
   }
 
+  //monta item atual vindo da listagem
   setUpItem(item) {
     if (item) {
       this.item = JSON.parse(item)            
@@ -91,6 +92,7 @@ export class FormComponent implements OnInit {
     }
   }
 
+  //funcao para exibir confirm box
   confirm() {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir este item?',

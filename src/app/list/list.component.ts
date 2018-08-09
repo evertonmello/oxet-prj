@@ -19,6 +19,10 @@ export class ListComponent implements OnInit {
     public itens = window.localStorage['itens'] ? JSON.parse(window.localStorage['itens']) : []
 
     ngOnInit() {
+        this.setUpList()
+    }
+
+    setUpList(){
         this.cols = [
             { field: 'name', header: 'Nome' },
             { field: 'unit', header: 'Unidade de Medida' },
@@ -39,6 +43,7 @@ export class ListComponent implements OnInit {
         return new Date(date).toLocaleDateString('pt')
     }
 
+    //evento disparado quando selecionado item
     onRowSelect(event) {
         this.newItem = false;
         this.item = event.data;
