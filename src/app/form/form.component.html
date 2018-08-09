@@ -7,7 +7,7 @@
                     <label for="vin">Nome</label>
                 </div>
                 <div class="ui-g-3">
-                    <input formControlName="name" pInputText autofocus maxlength="50" class="inputName" />
+                    <input formControlName="name" pInputText maxlength="50" class="inputName" />
                     <p-message *ngIf="displayErrorMsg('name')" severity="error" text="Este campo é obrigatório" ></p-message>                
                 </div>
             </div>
@@ -49,7 +49,7 @@
                     <label for="color">É Perecivel</label>
                 </div>
                 <div class="ui-g-4">
-                    <p-checkbox  formControlName="prshbl" label="Produto Perecível" binary="true"></p-checkbox>                
+                    <p-checkbox #p (click)="updValdtr(p)"  formControlName="prshbl" label="Produto Perecível" binary="true"></p-checkbox>                
                 </div>
             </div>
             <div class="ui-g-12">
@@ -57,9 +57,8 @@
                     <label for="color">Data de validade</label>
                 </div>
                 <div class="ui-g-3">
-                    <p-calendar *ngIf="!formdata.value.prshbl" formControlName="valDate" placeholder="Data de validade"   dateFormat="dd/mm/yy"></p-calendar>
-                    <p-calendar *ngIf="formdata.value.prshbl" required formControlName="valDate" placeholder="Data de validade"   dateFormat="dd/mm/yy"></p-calendar>
-                    <p-message *ngIf="displayErrorMsg('valDate') && formdata.value.prshbl"  severity="error" text="Este campo é obrigatório" ></p-message>                                
+                    <p-calendar formControlName="valDate" placeholder="Data de validade"   dateFormat="dd/mm/yy"></p-calendar>
+                    <p-message *ngIf="displayErrorMsg('valDate') && p.checked"  severity="error" text="Este campo é obrigatório" ></p-message>                                
                    
                 </div>
             </div>

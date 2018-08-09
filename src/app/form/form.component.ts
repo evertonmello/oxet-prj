@@ -59,11 +59,24 @@ export class FormComponent implements OnInit {
     });
   }
 
-  onSubmit(data) {
+  onSubmit(data) {    
     if(this.formdata.valid){
       this.save()
+    }else{
+      this.showError = true;
     }
-    this.showError = true;
+  }
+
+  //atualiza regra de validacao do campo data de validade
+  updValdtr(prsbl){
+    if(prsbl.checked){
+      this.formdata.controls['valDate'].setValidators([Validators.required])
+      this.formdata.controls['valDate'].updateValueAndValidity([Validators.required])
+     }else{
+      this.formdata.controls['valDate'].setValidators([])
+      this.formdata.controls['valDate'].updateValueAndValidity([])
+     }
+ 
   }
 
   //retorna se mostra ou nao mensagem de erro para cada campo
@@ -87,6 +100,7 @@ export class FormComponent implements OnInit {
   }
 
   delete() {
+    console.log("del")
     try {
       var index = this.item.id
       this.itens = this.itens.filter((val, i) => val.id != index);
@@ -101,15 +115,17 @@ export class FormComponent implements OnInit {
 
   save() {
     try {
-      if (!this.newItem) {
-        var index = this.item.id
-        this.itens = this.itens.filter((val, i) => val.id != index);
+      if (this.newItem) {
+        this.item = this.formdata.value;
+        this.item.id = Math.floor(Math.random() * 100);     
       }else{
-        this.item.id = Math.floor(Math.random() * 100);
-      }      
-
-      this.item = this.formdata.value;
+        var id = this.item.id
+        this.item = this.formdata.value;
+        this.item.id = id;
+        this.itens = this.itens.filter((val, i) => val.id != id);
+      } 
       this.itens.push(this.item)
+
       window.localStorage['itens'] = JSON.stringify(this.itens)
       this.item = null;
       this.router.navigate(['/listagem']);
