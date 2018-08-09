@@ -1,78 +1,85 @@
 <router-outlet style="width: 100%"></router-outlet>
 <div class="main" >        
-    <div class="ui-g ui-fluid" *ngIf="item">
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="vin">Nome</label>
+    <form [formGroup]="formdata" (ngSubmit)="onSubmit(formdata.value)" >
+        <div class="ui-g ui-fluid" *ngIf="item">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="vin">Nome</label>
+                </div>
+                <div class="ui-g-3">
+                    <input formControlName="name" pInputText autofocus maxlength="50" class="inputName" />
+                    <p-message *ngIf="displayErrorMsg('name')" severity="error" text="Este campo é obrigatório" ></p-message>                
+                </div>
             </div>
-            <div class="ui-g-3">
-                <input pInputText id="name"[(ngModel)]="item.name"  autofocus maxlength="50" style="text-align: left" />
-                <p-message *ngIf="!item.name && showError"  severity="error" text="Este campo é obrigatório" ></p-message>                
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="year">Unidade de Medida</label>
+                </div>
+                <div class="ui-g-4">
+                    <p-dropdown formControlName="unit" [options]="units" placeholder="Unidade de medida" ></p-dropdown>
+                    <p-message *ngIf="displayErrorMsg('unit')" severity="error" text="Este campo é obrigatório" ></p-message>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="brand">Quantidade</label>
+                </div>
+                <div class="ui-g-2 ui-inputgroup">
+                    <input  formControlName="amount" *ngIf="item.unit == 'Litro' || item.unit == 'Quilograma' || !item.unit " type="text" mask="0*,000" pInputText    />
+                    <input  formControlName="amount" *ngIf="item.unit == 'Unidade'" type='text'  mask="0*"   pInputText  />
+                    <span *ngIf="item.unit == 'Litro' || !item.unit" class="ui-inputgroup-addon">lt</span>
+                    <span *ngIf="item.unit == 'Quilograma'" class="ui-inputgroup-addon">kg</span>
+                    <span *ngIf="item.unit == 'Unidade'" class="ui-inputgroup-addon">un</span>            
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="color">Preço</label>                                
+                </div>
+                <div class="ui-g-2">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon">R$</span>            
+                        <input formControlName="price" pInputText currencyMask  [options]="{ prefix: '', thousands: '.', decimal: ',' }" class="iptPrice" />
+                    </div>
+                    <p-message *ngIf="displayErrorMsg('price')" severity="error" text="Este campo é obrigatório" ></p-message>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="color">É Perecivel</label>
+                </div>
+                <div class="ui-g-4">
+                    <p-checkbox  formControlName="prshbl" label="Produto Perecível" binary="true"></p-checkbox>                
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="color">Data de validade</label>
+                </div>
+                <div class="ui-g-3">
+                    <p-calendar *ngIf="!formdata.value.prshbl" formControlName="valDate" placeholder="Data de validade"   dateFormat="dd/mm/yy"></p-calendar>
+                    <p-calendar *ngIf="formdata.value.prshbl" required formControlName="valDate" placeholder="Data de validade"   dateFormat="dd/mm/yy"></p-calendar>
+                    <p-message *ngIf="displayErrorMsg('valDate') && formdata.value.prshbl"  severity="error" text="Este campo é obrigatório" ></p-message>                                
+                   
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="color">Data de fabricação</label>
+                </div>
+                <div class="ui-g-3">
+                    <p-calendar formControlName="fabDate" placeholder="Data de fabricação"   [maxDate]="formdata.value.valDate" dateFormat="dd/mm/yy" [readonlyInput]="true"></p-calendar>
+                    <p-message  *ngIf="displayErrorMsg('fabDate')"  severity="error" text="Este campo é obrigatório" ></p-message>                
+                </div>
             </div>
         </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="year">Unidade de Medida</label>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button *ngIf="!newItem" type="button" pButton icon="fa fa-check" (click)="confirm()" label="Excluir"></button>        
+                <button type="button" pButton icon="fa fa-close" (click)="cancel()" label="Cancelar"></button>
+                <button type="submit" pButton icon="fa fa-check"  label="Salvar"></button>
             </div>
-            <div class="ui-g-4">
-                <p-dropdown [options]="units" placeholder="Unidade de medida" id="unit" [(ngModel)]="item.unit"></p-dropdown>
-                <p-message  *ngIf="!item.unit && showError" severity="error" text="Este campo é obrigatório" ></p-message>
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="brand">Quantidade</label>
-            </div>
-            <div class="ui-g-2 ui-inputgroup">
-                <input *ngIf="item.unit == 'Litro' || item.unit == 'Quilograma' || !item.unit " type="text" mask="0*,000" pInputText id="amount" [(ngModel)]="item.amount"  />
-                <input *ngIf="item.unit == 'Unidade'" type='text'  mask="0*"   pInputText id="amount" [(ngModel)]="item.amount" />
-                <span *ngIf="item.unit == 'Litro' || !item.unit" class="ui-inputgroup-addon">lt</span>
-                <span *ngIf="item.unit == 'Quilograma'" class="ui-inputgroup-addon">kg</span>
-                <span *ngIf="item.unit == 'Unidade'" class="ui-inputgroup-addon">un</span>            
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="color">Preço</label>                                
-            </div>
-            <div class="ui-g-2">
-                <input pInputText currencyMask  [(ngModel)]="item.price" [options]="{ prefix: '', thousands: '.', decimal: ',' }" class="iptPrice" />
-                <p-message  *ngIf="!item.price && showError" severity="error" text="Este campo é obrigatório" ></p-message>
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="color">É Perecivel</label>
-            </div>
-            <div class="ui-g-4">
-                <p-checkbox [(ngModel)]="item.prshbl" label="Produto Perecível" binary="true"></p-checkbox>                
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="color">Data de validade</label>
-            </div>
-            <div class="ui-g-3">
-                <p-calendar id="valDate" placeholder="Data de validade" [(ngModel)]="item.valDate" dateFormat="dd/mm/yy"></p-calendar>
-                <p-message  *ngIf="!item.valDate && showError &&  item.prshbl"  severity="error" text="Este campo é obrigatório" ></p-message>                                
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="color">Data de fabricação</label>
-            </div>
-            <div class="ui-g-3">
-                <p-calendar id="fabDate" placeholder="Data de fabricação" [(ngModel)]="item.fabDate" [maxDate]="item.valDate" dateFormat="dd/mm/yy" [readonlyInput]="true"></p-calendar>
-                <p-message  *ngIf="!item.fabDate && showError"  severity="error" text="Este campo é obrigatório" ></p-message>                
-            </div>
-        </div>
-    </div>
-    <p-footer>
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button *ngIf="!newItem" type="button" pButton icon="fa fa-check" (click)="confirm()" label="Excluir"></button>        
-            <button type="button" pButton icon="fa fa-close" (click)="cancel()" label="Cancelar"></button>
-            <button type="button" pButton icon="fa fa-check" (click)="validate()" label="Salvar"></button>
-        </div>
-    </p-footer>
-</div>
+        </p-footer>
+    </form>
+</div> 
 <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle" width="425"></p-confirmDialog>

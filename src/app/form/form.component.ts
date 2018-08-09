@@ -1,12 +1,12 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormControl, FormBuilder}   from '@angular/forms';
+import { FormBuilder,Validators}   from '@angular/forms';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'form',
+  selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css']
 })
@@ -16,18 +16,17 @@ export class FormComponent implements OnInit {
   itens = window.localStorage['itens'] ? JSON.parse(window.localStorage['itens']) : [];
   newItem = true; 
   showError = false; 
-  form:FormGroup;
   item = {
     id: 0,
-    name: '',
-    unit: '',
+    name: null,
+    unit: null,
     amount: null,
-    price: 0,
+    price: null,
     prshbl: false,
     valDate: null,
     fabDate: null
   }
-  value: Date;
+  formdata;
 
   public units = [
     { label: 'Litro', value: 'Litro' },
@@ -44,6 +43,34 @@ export class FormComponent implements OnInit {
     this.route
       .queryParams
       .subscribe(params => this.setUpItem(params.item));
+    
+    this.buildForm();
+  }
+
+  buildForm(){
+    this.formdata = this.formbuilder.group({
+      name:[this.item.name,Validators.required],
+      unit:[this.item.unit,Validators.required],
+      amount:[this.item.amount],
+      price:[this.item.price,Validators.required],        
+      valDate:[this.item.valDate],        
+      fabDate:[this.item.fabDate,Validators.required],        
+      prshbl: [this.item.prshbl]
+    });
+  }
+
+  onSubmit(data) {
+    console.log(this.formdata)
+    if(this.formdata.valid){
+      this.save()
+    }
+    this.showError = true;
+  }
+
+  //retorna se mostra ou nao mensagem de erro para cada campo
+  displayErrorMsg(field){
+    return !this.formdata.controls[field].valid && this.formdata.controls[field].touched ||
+         !this.formdata.controls[field].valid && this.showError ? true:false;
   }
 
   //monta item atual vindo da listagem
@@ -82,6 +109,7 @@ export class FormComponent implements OnInit {
         this.item.id = Math.floor(Math.random() * 100);
       }      
 
+      this.item = this.formdata.value;
       this.itens.push(this.item)
       window.localStorage['itens'] = JSON.stringify(this.itens)
       this.item = null;
@@ -100,23 +128,5 @@ export class FormComponent implements OnInit {
         this.delete();
       }
     });
-  }
-
-  validate(){      
-    var save = true
-    for (var property in this.item) {        
-      if(this.item.prshbl && !this.item.valDate){
-        save = false
-      }
-      if(!this.item[property] && property != 'id' && property != 'prshbl' && property != 'valDate'){
-        save = false
-      }       
-    }
-    if(save){
-      this.save()
-    }
-
-    this.showError = true;
-  } 
-  
+  }  
 }
