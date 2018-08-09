@@ -99,8 +99,7 @@ export class FormComponent implements OnInit {
     this.router.navigate(['/listagem']);
   }
 
-  delete() {
-    console.log("del")
+  delete() {    
     try {
       var index = this.item.id
       this.itens = this.itens.filter((val, i) => val.id != index);
